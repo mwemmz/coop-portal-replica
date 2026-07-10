@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MemberStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum PayoutStatus {
+  PENDING
+  PAID
+}
+
+enum ListingStatus {
+  ACTIVE
+  OUT_OF_STOCK
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DISPATCHED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  CONTENT_EDITOR
+  SALES_MANAGER
+}
+
+model Member {
+  id            String       @id @default(cuid())
+  membershipNo  String       @unique
+  name          String
+  phone         String       @unique
+  email         String?
+  passwordHash  String
+  farmLocation  String?
+  status        MemberStatus @default(ACTIVE)
+  joinedAt      DateTime     @default(now())
+  contributions Contribution[]
+  payouts       Payout[]
+}
+
+model Contribution {
+  id          String   @id @default(cuid())
+  member      Member   @relation(fields: [memberId], references: [id])
+  memberId    String
+  produceType String
+  grade       String
+  quantityKg  Decimal
+  deliveredAt DateTime
+  recordedBy  String
+}
+
+model Payout {
+  id       String       @id @default(cuid())
+  member   Member       @relation(fields: [memberId], references: [id])
+  memberId String
+  amount   Decimal
+  status   PayoutStatus @default(PENDING)
+  paidAt   DateTime?
+}
+
+model ProduceListing {
+  id         String        @id @default(cuid())
+  name       String
+  category   String
+  grade      String
+  price      Decimal
+  quantityKg Decimal
+  images     String
+  status     ListingStatus @default(ACTIVE)
+  orderItems OrderItem[]
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  reference   String      @unique
+  buyerName   String
+  buyerPhone  String
+  buyerEmail  String?
+  isBulk      Boolean     @default(false)
+  status      OrderStatus @default(PENDING)
+  totalAmount Decimal
+  items       OrderItem[]
+  payment     Payment?
+  createdAt   DateTime    @default(now())
+}
+
+model OrderItem {
+  id         String         @id @default(cuid())
+  order      Order          @relation(fields: [orderId], references: [id])
+  orderId    String
+  listing    ProduceListing @relation(fields: [listingId], references: [id])
+  listingId  String
+  quantityKg Decimal
+  unitPrice  Decimal
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  order       Order         @relation(fields: [orderId], references: [id])
+  orderId     String        @unique
+  provider    String
+  providerRef String
+  amount      Decimal
+  status      PaymentStatus @default(PENDING)
+  loggedAt    DateTime      @default(now())
+}
+
+model AdminUser {
+  id           String     @id @default(cuid())
+  name         String
+  email        String     @unique
+  role         AdminRole  @default(CONTENT_EDITOR)
+  passwordHash String
+  lastLogin    DateTime?
+}
+
+model ContentPage {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  body      String
+  images    String  @default("[]")
+  published Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  action    String
+  entity    String
+  entityId  String
+  createdAt DateTime @default(now())
+}
+
+model ShareCertificate {
+  id             String   @id @default(cuid())
+  memberName     String
+  issueDate      DateTime
+  shareValue     Decimal
+  numberOfShares Decimal
+  createdAt      DateTime @default(now())
+}
+
+model MemberPayment {
+  id              String   @id @default(cuid())
+  memberName      String
+  paymentDate     DateTime
+  shareValue      Decimal  @default(0)
+  registrationFee Decimal  @default(0)
+  subscriptionFee Decimal  @default(0)
+  totalPayment    Decimal  @default(0)
+  shareNumber     Decimal  @default(0)
+  createdAt       DateTime @default(now())
+}

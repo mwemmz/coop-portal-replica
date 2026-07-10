@@ -1,0 +1,187 @@
+/* ============================================================
+   GLASS-ON-GRADIENT DESIGN LANGUAGE
+   Tokens, utility classes, and reusable patterns.
+   Import once in layout.tsx after globals.css.
+   ============================================================ */
+
+/* ---------- gradient section backgrounds ---------- */
+.bg-gradient-flesh-skin {
+  background: linear-gradient(135deg, var(--color-avocado-skin), var(--color-pit));
+}
+.bg-gradient-pit-skin {
+  background: linear-gradient(135deg, var(--color-pit), var(--color-avocado-skin));
+}
+/* lit-corner variant — brighter in top-left */
+.bg-gradient-flesh-skin--lit {
+  background:
+    radial-gradient(ellipse 100% 80% at 0% 0%, rgba(53, 64, 38, 0.35), transparent 60%),
+    linear-gradient(135deg, var(--color-avocado-skin), var(--color-pit));
+}
+.bg-gradient-pit-skin--lit {
+  background:
+    radial-gradient(ellipse 100% 80% at 0% 0%, rgba(156, 85, 35, 0.25), transparent 60%),
+    linear-gradient(135deg, var(--color-pit), var(--color-avocado-skin));
+}
+
+/* ---------- atmospheric blob (soft organic shape bleeding off edge) ---------- */
+.glass-blob {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.glass-blob--light {
+  background: rgba(244, 240, 228, 0.2);
+}
+.glass-blob--flesh {
+  background: var(--color-surface);
+}
+.glass-blob--pit {
+  background: var(--color-pit);
+}
+
+/* ---------- glass surface (the core card panel) ---------- */
+.glass-surface {
+  position: relative;
+  background: rgba(35, 43, 28, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px -10px rgba(35, 43, 28, 0.4);
+  overflow: hidden;
+}
+/* lighter ink variant — slightly more transparent for visual depth */
+.glass-surface--light {
+  background: rgba(35, 43, 28, 0.45);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 20px 60px -10px rgba(35, 43, 28, 0.3);
+}
+
+/* warm accent variant — pit brown glass for section variety */
+.glass-surface--warm {
+  position: relative;
+  background: rgba(35, 43, 28, 0.55);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px -10px rgba(35, 43, 28, 0.4);
+  overflow: hidden;
+}
+/* fine vertical-stripe noise overlay */
+.glass-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0px,
+    rgba(255, 255, 255, 0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+/* when a child needs to overflow the glass boundary, move overflow to outer wrapper */
+.glass-surface--overflowing {
+  overflow: visible;
+}
+
+/* ---------- text hierarchy on glass (all glass is now dark) ---------- */
+.glass-eyebrow {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-surface);
+}
+.glass-headline {
+  font-weight: 700;
+  color: var(--color-surface);
+  line-height: 1.15;
+}
+.glass-body {
+  color: rgba(244, 240, 228, 0.80);
+  line-height: 1.6;
+}
+.glass-body a {
+  color: var(--color-surface);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ---------- dashed divider ---------- */
+.glass-divider {
+  border: none;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+  margin: 1rem 0;
+}
+
+/* ---------- glass badge / pill ---------- */
+.glass-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(244, 240, 228, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--color-surface);
+}
+
+/* ---------- entrance animation (fade + rise, spring) ---------- */
+@keyframes glass-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.glass-entrance {
+  animation: glass-rise 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.glass-entrance-delay-1 { animation-delay: 0.1s; }
+.glass-entrance-delay-2 { animation-delay: 0.2s; }
+.glass-entrance-delay-3 { animation-delay: 0.3s; }
+.glass-entrance-delay-4 { animation-delay: 0.4s; }
+.glass-entrance-delay-5 { animation-delay: 0.5s; }
+
+/* floating child entrance: delayed + rotate settle */
+@keyframes glass-float-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px) rotate(-6deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+}
+.glass-float-entrance {
+  animation: glass-float-rise 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.12s both;
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .glass-entrance,
+  .glass-float-entrance {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
