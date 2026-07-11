@@ -4,6 +4,7 @@ import Link from "next/link";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
+    <>
     <header
       className="sticky top-0 z-40 backdrop-blur-md border-b border-white/10 text-white"
       style={{ backgroundColor: "rgba(35, 43, 28, 0.90)" }}
@@ -36,5 +37,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     >
       <div className="mx-auto max-w-6xl px-4 py-8">{children}</div>
     </main>
+    </>
   );
 }
