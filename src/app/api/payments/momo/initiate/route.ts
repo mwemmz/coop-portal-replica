@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { MTNMoMoProvider } from "@/lib/payments/mtn-momo";
 import { rateLimit } from "@/lib/rate-limit";
 
+export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
   const body = (await req.json()) as { [key: string]: unknown };

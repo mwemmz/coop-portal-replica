@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 
+export const runtime = "edge";
 
 const encoder = new TextEncoder();
 

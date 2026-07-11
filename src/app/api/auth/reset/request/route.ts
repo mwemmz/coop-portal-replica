@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { SignJWT } from "jose";
 
+export const runtime = "edge";
 
 const encoder = new TextEncoder();
 function getSecret(): Uint8Array {
