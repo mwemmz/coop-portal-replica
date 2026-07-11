@@ -24,7 +24,7 @@ export default async function ProducePage() {
       </Reveal>
 
       <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3 md:mt-16">
-        {listings.map((item, i) => (
+        {listings.map((item: any, i: number) => (
           <Reveal key={item.id} delay={(i % 3) * 100} className="h-full">
             <Link
               href={`/produce/${item.id}`}
