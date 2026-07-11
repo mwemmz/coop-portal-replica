@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/mock-session";
 import { Card, StatusBadge, statusTone } from "@/components/ui";
 
 interface Payout {
